@@ -9,9 +9,9 @@ if __name__ == "__main__":
 	header = game.entities.Header("DATA", "The Gasworks")
 	engine.add(header)
 
-	mapper = game.entities.Map(1600, pygame.Rect(0, 0, 792, 390))
+	mapper = game.entities.Map(1200, pygame.Rect(0, 0, 792, 390))
 	#mapper.fetch_map((-5.9234923, 54.5899493), 0.02)
-	mapper.fetch_map((-73.9654541015625, 40.78184126814031), 0.02)
+	mapper.fetch_map((-77.02016830444336, 38.90319040137062), 0.01)
 	mapper.move_map(400, 560)
 	engine.add(mapper)
 

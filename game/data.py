@@ -30,15 +30,18 @@ class Maps(object):
 		)
 		print "... got 'em."
 		osm_dict = xmltodict.parse(response.text.encode('UTF-8'))
-		for node in osm_dict['osm']['node']:
-			self.nodes[node['@id']] = node
+		try:
+			for node in osm_dict['osm']['node']:
+				self.nodes[node['@id']] = node
 
-		for way in osm_dict['osm']['way']:
-			waypoints = []
-			for node_id in way['nd']:
-				node = self.nodes[node_id['@ref']]
-				waypoints.append((float(node['@lat']), float(node['@lon'])))
-			self.ways.append(waypoints)
+			for way in osm_dict['osm']['way']:
+				waypoints = []
+				for node_id in way['nd']:
+					node = self.nodes[node_id['@ref']]
+					waypoints.append((float(node['@lat']), float(node['@lon'])))
+				self.ways.append(waypoints)
+		except:
+			print response.text
 
 	def fetch_by_coordinate(self, coords, range):
 		return self.fetch_area((
