@@ -77,7 +77,7 @@ class Map(game.Entity):
 		self._fetching.start()
 
 	def _internal_fetch_map(self, position, radius):
-		self._mapper.fetch_by_coordinate(position, radius)
+		self._mapper.fetch_grid(position)
 		self.redraw_map()
 
 	def update(self, *args, **kwargs):
@@ -85,20 +85,21 @@ class Map(game.Entity):
 
 	def render(self, *args, **kwargs):
 		self.fill((0, 0, 0))
-		if self._fetching.is_alive():
-			pygame.draw.circle(self, (255, 255, 255), (11, 11), self._loading_size)
-			self._loading_size += 1
-			if self._loading_size >= 10:
-				self._loading_size = 0
-		else:
-			self.blit(self._map_surface, (0, 0), area=self._render_rect)
+		# if self._fetching.is_alive():
+		# 	pygame.draw.circle(self, (255, 255, 255), (11, 11), self._loading_size)
+		# 	self._loading_size += 1
+		# 	if self._loading_size >= 10:
+		# 		self._loading_size = 0
+		# else:
+		self.blit(self._map_surface, (0, 0), area=self._render_rect)
 		super(Map, self).render(*args, **kwargs)
 
 	def move_map(self, x, y):
 		self._render_rect.move_ip(x, y)
 
-	def redraw_map(self):
-		for way in self._mapper.transpose_ways((self._size, self._size), (self._size / 2, self._size / 2)):
+	def redraw_map(self, coef=1):
+		self._map_surface.fill((0, 0, 0))
+		for way in self._mapper.transpose_ways((self._size/coef, self._size/coef), (self._size / 2, self._size / 2)):
 			pygame.draw.lines(
 				self._map_surface,
 				(85, 251, 167),

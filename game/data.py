@@ -1,5 +1,6 @@
 import xmltodict
 import requests
+import math
 
 
 class Maps(object):
@@ -10,10 +11,35 @@ class Maps(object):
 	width = 0
 	height = 0
 
+	SIG_PLACES = 3;
+	GRID_SIZE = 0.001;
+
 	def __init__(self, *args, **kwargs):
 		super(Maps, self).__init__(*args, **kwargs)
 
+
+	def float_floor_to_precision(self, value, precision):
+		for i in range(precision):
+			value *= 10
+		value = math.floor(value)
+		for i in range(precision):
+			value /= 10
+		return value
+
+
+	def fetch_grid(self, coords):
+		lat = self.float_floor_to_precision(coords[0], self.SIG_PLACES)
+		lng = self.float_floor_to_precision(coords[1], self.SIG_PLACES)
+
+		return self.fetch_area([
+			lat - self.GRID_SIZE,
+			lng - self.GRID_SIZE,
+			lat + self.GRID_SIZE,
+			lng + self.GRID_SIZE
+		])
+
 	def fetch_area(self, bounds):
+		print bounds
 		self.width = (bounds[2] - bounds[0]) / 2
 		self.height = (bounds[3] - bounds[1]) / 2
 		self.origin = (
