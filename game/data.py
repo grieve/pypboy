@@ -2,11 +2,13 @@ import xmltodict
 import requests
 import math
 
+menus = ["Local Map","World Map","Quests","Misc","Radio"] 
 
 class Maps(object):
 
 	nodes = {}
 	ways = []
+	tags = []
 	origin = None
 	width = 0
 	height = 0
@@ -46,28 +48,43 @@ class Maps(object):
 			bounds[0] + self.width,
 			bounds[1] + self.height
 		)
-		print "Fetching maps..."
-		response = requests.get("http://www.openstreetmap.org/api/0.6/map?bbox=%f,%f,%f,%f" % (
+		url = "http://www.openstreetmap.org/api/0.6/map?bbox=%f,%f,%f,%f" % (
 				bounds[0],
 				bounds[1],
 				bounds[2],
 				bounds[3]
 			)
-		)
+		print "Fetching maps... "+url
+		response = requests.get(url)
 		print "... got 'em."
 		osm_dict = xmltodict.parse(response.text.encode('UTF-8'))
 		try:
 			for node in osm_dict['osm']['node']:
 				self.nodes[node['@id']] = node
-
+				if node.has_key('tag'):
+					for tag in node['tag']:
+						try:
+							#Named Amenities
+							if tag["@k"] == "name":
+								self.tags.append((float(node['@lat']), float(node['@lon']),tag["@v"]))
+							#Personal Addresses - Removed
+							#if tag["@k"] == "addr:housenumber":
+							#	for t2 in node['tag']:
+							#		if t2["@k"] == "addr:street":
+							#			self.tags.append((float(node['@lat']), float(node['@lon']),tag["@v"]+" "+t2["@v"]))
+						except Exception, e:
+							pass
+					
+			print(self.tags)
 			for way in osm_dict['osm']['way']:
 				waypoints = []
 				for node_id in way['nd']:
 					node = self.nodes[node_id['@ref']]
 					waypoints.append((float(node['@lat']), float(node['@lon'])))
 				self.ways.append(waypoints)
-		except:
-			print response.text
+		except Exception, e:
+			print e
+			#print response.text
 
 	def fetch_by_coordinate(self, coords, range):
 		return self.fetch_area((
@@ -97,4 +114,26 @@ class Maps(object):
 					wp[1] += offset[1] * 2
 				transway.append(wp)
 			transways.append(transway)
+		print transways
 		return transways
+	
+	def transpose_tags(self, dimensions, offset, flip_y=True):
+		width = dimensions[0]
+		height = dimensions[1]
+		w_coef = width / self.width / 2
+		h_coef = height / self.height / 2
+		transtags = []
+		for tag in self.tags:
+			lat = tag[1] - self.origin[0]
+			lng = tag[0] - self.origin[1]
+			wp = [
+					tag[2],
+					(lat * w_coef) + offset[0],
+					(lng * h_coef) + offset[1]
+			]
+			if flip_y:
+				wp[2] *= -1
+				wp[2] += offset[1] * 2
+			transtags.append(wp)
+		print(transtags)
+		return transtags
