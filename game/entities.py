@@ -5,6 +5,28 @@ import pygame
 import threading
 import datetime
 
+class Overlay(game.Entity):
+	def __init__(self):
+		self.image = pygame.image.load('images/overlay.png')
+		super(Overlay, self).__init__((globals.WIDTH, globals.HEIGHT))
+		self.blit_alpha(self, self.image, (0, 0), 128)
+	
+	def blit_alpha(self, target, source, location, opacity):
+		x = location[0]
+		y = location[1]
+		temp = pygame.Surface((source.get_width(), source.get_height())).convert()
+		temp.blit(target, (-x, -y))
+		temp.blit(source, (0, 0))
+		temp.set_alpha(opacity)        
+		target.blit(temp, location)
+
+	def update(self, *args, **kwargs):
+		super(Overlay, self).update(*args, **kwargs)
+
+	def render(self, *args, **kwargs):
+		#self.blit_alpha(self, self.image, (0, 0), 128)
+		super(Overlay, self).update(*args, **kwargs)
+		
 class Header(game.Entity):
 
 	_headline = "HEADER"
@@ -21,19 +43,20 @@ class Header(game.Entity):
 		super(Header, self).update(*args, **kwargs)
 
 	def render(self, *args, **kwargs):
-		pygame.draw.line(self, (85, 251, 167), (4, 14), (4, 36), 2)
-		pygame.draw.line(self, (85, 251, 167), (4, 14), (626, 14), 2)
-		pygame.draw.line(self, (85, 251, 167), (626, 14), (626, 36), 2)
-		pygame.draw.line(self, (85, 251, 167), (630, 14), (globals.WIDTH - 6, 14), 2)
-		pygame.draw.line(self, (85, 251, 167), (globals.WIDTH - 6, 14), (globals.WIDTH - 6, 36), 2)
+		pygame.draw.line(self, (95, 255, 177), (10, 20), (10, 40), 2)
+		pygame.draw.line(self, (95, 255, 177), (10, 20), (626, 20), 2)
+		pygame.draw.line(self, (95, 255, 177), (626, 20), (626, 40), 2)
+		pygame.draw.line(self, (95, 255, 177), (630, 20), (globals.WIDTH - 10, 20), 2)
+		pygame.draw.line(self, (95, 255, 177), (globals.WIDTH - 10, 20), (globals.WIDTH - 10, 40), 2)
 
 		basicFont = pygame.font.SysFont(None, 24)
-		text = basicFont.render("   %s   " % self._headline, True, (85, 251, 167), (0, 0, 0))
-		self.blit(text, (16, 5))
-		text = basicFont.render(self._title, True, (85, 251, 167), (0, 0, 0))
-		self.blit(text, (626 - text.get_width() - 10, 18))
-		text = basicFont.render(self._date, True, (85, 251, 167), (0, 0, 0))
-		self.blit(text, (656, 18))
+		text = basicFont.render("   %s   " % self._headline, True, (105, 251, 187), (0, 0, 0))
+		self.blit(text, (26, 15))
+		text = basicFont.render(self._title, True, (95, 255, 177), (0, 0, 0))
+		self.blit(text, (626 - text.get_width() - 10, 24))
+		text = basicFont.render(self._date, True, (95, 255, 177), (0, 0, 0))
+		self.blit(text, (656, 24))
+		
 		super(Header, self).update(*args, **kwargs)
 
 
@@ -48,18 +71,18 @@ class Footer(game.Entity):
 		super(Footer, self).update(*args, **kwargs)
 
 	def render(self, *args, **kwargs):
-		pygame.draw.line(self, (85, 251, 167), (4, globals.HEIGHT - 40), (4, globals.HEIGHT - 20), 2)
-		pygame.draw.line(self, (85, 251, 167), (4, globals.HEIGHT - 20), (globals.WIDTH - 6, globals.HEIGHT - 20), 2)
-		pygame.draw.line(self, (85, 251, 167), (globals.WIDTH - 6, globals.HEIGHT - 40), (globals.WIDTH - 6, globals.HEIGHT - 20), 2)
+		pygame.draw.line(self, (95, 255, 177), (10, globals.HEIGHT - 40), (10, globals.HEIGHT - 20), 2)
+		pygame.draw.line(self, (95, 255, 177), (10, globals.HEIGHT - 20), (globals.WIDTH - 10, globals.HEIGHT - 20), 2)
+		pygame.draw.line(self, (95, 255, 177), (globals.WIDTH - 10, globals.HEIGHT - 40), (globals.WIDTH - 10, globals.HEIGHT - 20), 2)
 		
 		offset = 50
 		for m in self.menu:
 			basicFont = pygame.font.SysFont(None, 24)
-			text = basicFont.render("   %s   " % m, True, (85, 251, 167), (0, 0, 0))
+			text = basicFont.render("   %s   " % m, True, (105, 255, 187), (0, 0, 0))
 			text_width = text.get_size()[0]
 			#print(m+" : "+str(text.get_size()))
 			if m == self.selected:
-				pygame.draw.rect(self, (85, 251, 167), (offset-2, globals.HEIGHT - 36,(text_width+3), 26), 2)
+				pygame.draw.rect(self, (95, 255, 177), (offset-2, globals.HEIGHT - 36,(text_width+3), 26), 2)
 			self.blit(text, (offset, 450))
 			
 			offset = offset + 160 + (text_width - 100)
@@ -124,7 +147,7 @@ class Map(game.Entity):
 		for tag in self._mapper.transpose_tags((self._size/coef, self._size/coef), (self._size / 2, self._size / 2)):
 			try:
 				basicFont = pygame.font.SysFont(None, 18)
-				text = basicFont.render("%s" % tag[0], True, (145, 255, 227), (0, 0, 0))
+				text = basicFont.render("%s" % tag[0], True, (95, 255, 177), (0, 0, 0))
 				text_width = text.get_size()[0]
 				pygame.draw.rect(
 				self._map_surface,
@@ -135,7 +158,7 @@ class Map(game.Entity):
 				self._map_surface.blit(text, (tag[1],tag[2]))
 				pygame.draw.rect(
 				self._map_surface,
-				(85, 251, 167),
+				(95, 255, 177),
 				(tag[1]-5,tag[2]-5,text_width+10,25),
 				1
 			    )
