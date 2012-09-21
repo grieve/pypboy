@@ -2,8 +2,6 @@ import xmltodict
 import requests
 import math
 
-menus = ["Local Map","World Map","Quests","Misc","Radio"] 
-
 class Maps(object):
 
 	nodes = {}

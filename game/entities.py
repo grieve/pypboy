@@ -27,6 +27,30 @@ class Overlay(game.Entity):
 		#self.blit_alpha(self, self.image, (0, 0), 128)
 		super(Overlay, self).update(*args, **kwargs)
 		
+
+class Health(game.Entity):
+	def __init__(self):
+		self.image = pygame.image.load('images/pipboy.png')
+		super(Health, self).__init__((globals.WIDTH, globals.HEIGHT))
+		self.blit_alpha(self, self.image, (250, 85), 255)
+	
+	def blit_alpha(self, target, source, location, opacity):
+		x = location[0]
+		y = location[1]
+		temp = pygame.Surface((source.get_width(), source.get_height())).convert()
+		temp.blit(target, (-x, -y))
+		temp.blit(source, (0, 0))
+		temp.set_alpha(opacity)        
+		target.blit(temp, location)
+
+	def update(self, *args, **kwargs):
+		super(Health, self).update(*args, **kwargs)
+
+	def render(self, *args, **kwargs):
+		#self.blit_alpha(self, self.image, (0, 0), 128)
+		super(Health, self).update(*args, **kwargs)
+		
+		
 class Header(game.Entity):
 
 	_headline = "HEADER"
@@ -62,9 +86,12 @@ class Header(game.Entity):
 
 class Footer(game.Entity):
 
-	def __init__(self, menu):
+	def __init__(self, menu, selected=None ):
 		self.menu = menu
-		self.selected = menu[0]
+		if selected:
+			self.selected = selected
+		else:
+			self.selected = menu[0]
 		super(Footer, self).__init__((globals.WIDTH, globals.HEIGHT))
 
 	def update(self, *args, **kwargs):
