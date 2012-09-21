@@ -20,7 +20,7 @@ if __name__ == "__main__":
 	#Scanlines
 	scanlines = game.effects.Scanlines(800, 480, 3, 1, [(0, 13, 3, 50),(6, 42, 22, 100), (0, 13, 3, 50)])
 	engine.add(scanlines)
-	scanlines2 = game.effects.Scanlines(800, 480, 8, 3, [(0, 10, 1, 0),(21, 62, 42, 90),(61, 122, 82, 100),(21, 62, 42, 90)] + [(0, 10, 1, 0) for x in range(50)])
+	scanlines2 = game.effects.Scanlines(800, 480, 8, 4, [(0, 10, 1, 0),(21, 62, 42, 90),(61, 122, 82, 100),(21, 62, 42, 90)] + [(0, 10, 1, 0) for x in range(50)])
 	engine.add(scanlines2)
 	
 	#Header & Footer
