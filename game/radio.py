@@ -1,3 +1,6 @@
+# encoding=utf-8
+
+import game
 import os
 import pygame
 import traceback
@@ -5,8 +8,81 @@ import numpy
 from numpy.fft import fft 
 from math import log10 
 import math
+from random import randint
 import copy
+import game.globals as globals
 
+
+class Radio(game.Entity):
+    def __init__(self):
+        super(Radio, self).__init__((globals.WIDTH, globals.HEIGHT))
+        # set up the mixer
+        
+        try: pygame.mixer.quit()
+        except: pass
+        
+        freq = 44100     # audio CD quality
+        bitsize = -16    # unsigned 16 bit
+        channels = 2     # 1 is mono, 2 is stereo
+        buffer = 2048    # number of samples (experiment to get right sound)
+        pygame.mixer.init(freq, bitsize, channels, buffer)
+        self.osc = Oscilloscope() 
+        self.osc.open(self)
+        self.paused = True
+        self.loaded = False
+        self.spectrum = None 
+        self.filename = ""
+    
+    def play_rnd(self):
+        files = load_files()
+        file = files[randint(0,len(files)-1)]
+        self.filename = file
+        pygame.mixer.music.load(file)
+        self.spectrum = LogSpectrum(file,force_mono=True) 
+        pygame.mixer.music.play()
+        self.loaded = True
+        self.paused = False
+        
+    def play(self):
+        if self.loaded:
+            self.paused = False
+            pygame.mixer.music.unpause()
+        else:
+            self.play_rnd()
+        
+    def stop(self):
+        self.paused = True
+        pygame.mixer.music.pause()
+
+    def update(self, *args, **kwargs):
+        super(Radio, self).update(*args, **kwargs)
+
+    def render(self, *args, **kwargs):
+        if not self.paused :
+            f,p = None,[0 for i in range(21)]
+            start = pygame.mixer.music.get_pos() / 1000.0
+            try:
+                f,p = self.spectrum.get_mono(start-0.001, start+0.001)
+            except:
+                pass
+            self.osc.update(start*50,f,p)    
+        if self.osc:
+            self.blit(self.osc.screen, (550, 150))
+            
+        selectFont = pygame.font.SysFont(None, 24)
+        basicFont = pygame.font.SysFont(None, 22)
+        text = selectFont.render(" -   Random Play Radio ", True, (105, 251, 187), (0, 0, 0))
+        self.blit(text, (75, 75))
+        text = basicFont.render("  'r' selects a random song ", True, (105, 251, 187), (0, 0, 0))
+        self.blit(text, (75, 100))
+        text = basicFont.render("  'p' to play   's' to stop ", True, (105, 251, 187), (0, 0, 0))
+        self.blit(text, (75, 120))
+        
+        if self.filename:
+            text = selectFont.render(u" %s " % self.filename[self.filename.rfind(os.sep)+1:], True, (105, 251, 187), (0, 0, 0))
+            self.blit(text, (75, 200))
+            
+        super(Radio, self).update(*args, **kwargs)
 
 class Oscilloscope:
     
@@ -14,14 +90,17 @@ class Oscilloscope:
         # Constants
         self.WIDTH, self.HEIGHT = 210, 200
         self.TRACE, self.AFTER, self.GREY = (80, 255, 100),(20, 155, 40),(20, 110, 30)
+        self.embedded = False
     
     def open(self, screen=None):
         # Open window
         pygame.init()
         if screen:
-            self.screen = screen
-            self.screen.set_mode((self.WIDTH, self.HEIGHT), 0)
+            '''Embedded'''
+            self.screen = pygame.Surface((self.WIDTH, self.HEIGHT), 0)
+            self.embedded = True
         else:
+            '''Own Display'''
             self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), 0)
                 
         # Create a blank chart with vertical ticks, etc
@@ -73,7 +152,8 @@ class Oscilloscope:
                 except: 
                     pass
             pygame.surfarray.blit_array(self.screen, pixels)     # Blit the screen buffer
-            pygame.display.flip()  
+            if not self.embedded:
+                pygame.display.flip()  
         except Exception,e:
             print traceback.format_exc()
 
@@ -194,10 +274,16 @@ class LogSpectrum(SoundSpectrum):
 
 def load_files():
     files = []
-    os.chdir("../radio")
+    workingdir = os.getcwd()
+    try:
+        os.chdir("radio")
+    except:
+        try: os.chdir("../radio")
+        except: pass
     for file in os.listdir("."):
         if file.endswith(".ogg"):
             files.append(os.path.abspath(file))
+    os.chdir(workingdir)
     return files
 
 def play_pygame(file):
@@ -250,6 +336,6 @@ if __name__ == "__main__":
     try:
         files = load_files()
         if files:
-            play_pygame(files[2])
+            play_pygame(files[randint(0,len(files)-1)])
     except Exception, e:
         print traceback.format_exc()

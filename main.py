@@ -4,10 +4,12 @@ import game.core
 import game.entities
 import game.effects
 import game.data
+import game.radio
 
 def load_stats(engine,sub="Status"):
 	
 	engine.rem("mapper")
+	engine.rem("radio")
 	
 	health = game.entities.Health()	
 	engine.add(health,"health")	
@@ -22,7 +24,8 @@ def load_stats(engine,sub="Status"):
 def load_items(engine,sub="Weapons"):
 	
 	engine.rem("mapper")
-	engine.rem("health")	
+	engine.rem("health")
+	engine.rem("radio")	
 	
 	#Header & Footer
 	header = game.entities.Header("ITEMS", "The Gasworks")
@@ -33,7 +36,9 @@ def load_items(engine,sub="Weapons"):
 
 def load_data(engine,sub="Local Map"):
 	
+	engine.rem("mapper")
 	engine.rem("health")
+	engine.rem("radio")
 	
 	#Header & Footer
 	header = game.entities.Header("DATA", "The Gasworks")
@@ -46,7 +51,12 @@ def load_data(engine,sub="Local Map"):
 		mapper = game.entities.Map(1200, pygame.Rect(0, 0, globals.WIDTH-8, globals.HEIGHT-80))
 		mapper.fetch_map((-77.02016830444336, 38.90319040137062), 0.01)
 		mapper.move_map(400, 560)
-		engine.add(mapper,"mapper")		
+		engine.add(mapper,"mapper")
+		
+	elif sub == "Radio":
+		#Radio
+		radio = game.radio.Radio()
+		engine.add(radio,"radio")		
 	
 	
 	
@@ -82,7 +92,14 @@ if __name__ == "__main__":
 				
 				#Submenu
 				#How do we navigate the submenus?
-				
+				if (event.key == pygame.K_r):
+					engine = load_data(engine,sub="Radio")
+				if (event.key == pygame.K_s):
+					try: engine.get("radio").stop()
+					except:	pass
+				if (event.key == pygame.K_p):
+					try: engine.get("radio").play()
+					except:	pass
 				
 				#Other Keys
 				if (event.key == pygame.K_UP):
@@ -105,3 +122,7 @@ if __name__ == "__main__":
 		engine.update()
 		engine.render()
 		pygame.time.wait(30)
+	
+	#turn off mixer
+	try: pygame.mixer.quit()
+	except: pass
