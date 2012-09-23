@@ -1,9 +1,9 @@
 import pygame
-
+from collections import OrderedDict
 
 class Engine(object):
 
-	_children = []
+	_children = OrderedDict()
 
 	def __init__(self, title, width, height, *args, **kwargs):
 		super(Engine, self).__init__(*args, **kwargs)
@@ -17,19 +17,29 @@ class Engine(object):
 		self.screen.fill((0, 0, 0))
 		if hasattr(self, 'graphic'):
 			self.screen.blit(self.graphic, (0, 0))
-		for child in self._children:
+		for child in reversed(self._children.values()):
 			child.render()
 			self.screen.blit(child, child.position)
 		pygame.display.flip()
 
 	def update(self):
-		for child in self._children:
+		for child in self._children.values():
 			child.update()
+			
+	def rem(self, child):
+		try:
+			del self._children[child]
+			print "%s: removed %s" % (self, child)
+		except:
+			pass
+		
+	def get(self, child):
+		return self._children[child]
 
-	def add(self, child):
+	def add(self, child, name):
 		if isinstance(child, pygame.Surface):
-			self._children.append(child)
-			print "%s: added %s" % (self, child)
+			self._children[name] = child
+			print "%s: added %s" % (self, name)
 		else:
 			raise Exception("Child must be pygame.Surface")
 
