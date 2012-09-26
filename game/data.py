@@ -28,8 +28,11 @@ class Maps(object):
 
 
 	def fetch_grid(self, coords):
-		lat = self.float_floor_to_precision(coords[0], self.SIG_PLACES)
-		lng = self.float_floor_to_precision(coords[1], self.SIG_PLACES)
+		# lat = self.float_floor_to_precision(coords[0], self.SIG_PLACES)
+		# lng = self.float_floor_to_precision(coords[1], self.SIG_PLACES)
+		# print lat, lng
+		lat = coords[0]
+		lng = coords[1]
 
 		return self.fetch_area([
 			lat - self.GRID_SIZE,
@@ -39,7 +42,6 @@ class Maps(object):
 		])
 
 	def fetch_area(self, bounds):
-		print bounds
 		self.width = (bounds[2] - bounds[0]) / 2
 		self.height = (bounds[3] - bounds[1]) / 2
 		self.origin = (
@@ -52,9 +54,13 @@ class Maps(object):
 				bounds[2],
 				bounds[3]
 			)
-		print "Fetching maps... "+url
+		print "[Fetching maps... (%f, %f) to (%f, %f)]"% (
+				bounds[0],
+				bounds[1],
+				bounds[2],
+				bounds[3]
+			)
 		response = requests.get(url)
-		print "... got 'em."
 		osm_dict = xmltodict.parse(response.text.encode('UTF-8'))
 		try:
 			for node in osm_dict['osm']['node']:
@@ -73,7 +79,6 @@ class Maps(object):
 						except Exception, e:
 							pass
 					
-			print(self.tags)
 			for way in osm_dict['osm']['way']:
 				waypoints = []
 				for node_id in way['nd']:
@@ -112,7 +117,6 @@ class Maps(object):
 					wp[1] += offset[1] * 2
 				transway.append(wp)
 			transways.append(transway)
-		print transways
 		return transways
 	
 	def transpose_tags(self, dimensions, offset, flip_y=True):
@@ -133,5 +137,4 @@ class Maps(object):
 				wp[2] *= -1
 				wp[2] += offset[1] * 2
 			transtags.append(wp)
-		print(transtags)
 		return transtags
