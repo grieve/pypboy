@@ -48,10 +48,14 @@ def load_data(engine,sub="Local Map"):
 	
 	if sub == "Local Map":
 		#Mapper
-		mapper = game.entities.Map(1200, pygame.Rect(0, 0, globals.WIDTH-8, globals.HEIGHT-80))
-		mapper.fetch_map((-77.02016830444336, 38.90319040137062), 0.01)
-		mapper.move_map(400, 560)
-		engine.add(mapper,"mapper")
+		# mapper = game.entities.Map(1200, pygame.Rect(0, 0, globals.WIDTH-8, globals.HEIGHT-80))
+		# mapper.fetch_map((-77.02016830444336, 38.90319040137062), 0.01)
+		# mapper.move_map(400, 560)
+		# engine.add(mapper,"mapper")
+		mapgrid = game.entities.MapGrid((-5.936, 54.593), (globals.WIDTH - 8, globals.HEIGHT - 80))
+		mapgrid.position = (4, 40)
+		engine.add(mapgrid, "mapgrid")
+
 		
 	elif sub == "Radio":
 		#Radio
