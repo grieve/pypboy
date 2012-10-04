@@ -5,19 +5,20 @@ import pygame
 import threading
 import datetime
 
+
 class Overlay(game.Entity):
 	def __init__(self):
 		self.image = pygame.image.load('images/overlay.png')
 		super(Overlay, self).__init__((globals.WIDTH, globals.HEIGHT))
 		self.blit_alpha(self, self.image, (0, 0), 128)
-	
+
 	def blit_alpha(self, target, source, location, opacity):
 		x = location[0]
 		y = location[1]
 		temp = pygame.Surface((source.get_width(), source.get_height())).convert()
 		temp.blit(target, (-x, -y))
 		temp.blit(source, (0, 0))
-		temp.set_alpha(opacity)        
+		temp.set_alpha(opacity)
 		target.blit(temp, location)
 
 	def update(self, *args, **kwargs):
@@ -26,21 +27,21 @@ class Overlay(game.Entity):
 	def render(self, *args, **kwargs):
 		#self.blit_alpha(self, self.image, (0, 0), 128)
 		super(Overlay, self).update(*args, **kwargs)
-		
+
 
 class Health(game.Entity):
 	def __init__(self):
 		self.image = pygame.image.load('images/pipboy.png')
 		super(Health, self).__init__((globals.WIDTH, globals.HEIGHT))
 		self.blit_alpha(self, self.image, (250, 85), 255)
-	
+
 	def blit_alpha(self, target, source, location, opacity):
 		x = location[0]
 		y = location[1]
 		temp = pygame.Surface((source.get_width(), source.get_height())).convert()
 		temp.blit(target, (-x, -y))
 		temp.blit(source, (0, 0))
-		temp.set_alpha(opacity)        
+		temp.set_alpha(opacity)
 		target.blit(temp, location)
 
 	def update(self, *args, **kwargs):
@@ -49,8 +50,8 @@ class Health(game.Entity):
 	def render(self, *args, **kwargs):
 		#self.blit_alpha(self, self.image, (0, 0), 128)
 		super(Health, self).update(*args, **kwargs)
-		
-		
+
+
 class Header(game.Entity):
 
 	_headline = "HEADER"
@@ -80,13 +81,13 @@ class Header(game.Entity):
 		self.blit(text, (626 - text.get_width() - 10, 24))
 		text = basicFont.render(self._date, True, (95, 255, 177), (0, 0, 0))
 		self.blit(text, (656, 24))
-		
+
 		super(Header, self).update(*args, **kwargs)
 
 
 class Footer(game.Entity):
 
-	def __init__(self, menu, selected=None ):
+	def __init__(self, menu, selected=None):
 		self.menu = menu
 		if selected:
 			self.selected = selected
@@ -101,7 +102,7 @@ class Footer(game.Entity):
 		pygame.draw.line(self, (95, 255, 177), (10, globals.HEIGHT - 40), (10, globals.HEIGHT - 20), 2)
 		pygame.draw.line(self, (95, 255, 177), (10, globals.HEIGHT - 20), (globals.WIDTH - 10, globals.HEIGHT - 20), 2)
 		pygame.draw.line(self, (95, 255, 177), (globals.WIDTH - 10, globals.HEIGHT - 40), (globals.WIDTH - 10, globals.HEIGHT - 20), 2)
-		
+
 		offset = 50
 		for m in self.menu:
 			basicFont = pygame.font.SysFont(None, 24)
@@ -109,11 +110,11 @@ class Footer(game.Entity):
 			text_width = text.get_size()[0]
 			#print(m+" : "+str(text.get_size()))
 			if m == self.selected:
-				pygame.draw.rect(self, (95, 255, 177), (offset-2, globals.HEIGHT - 36,(text_width+3), 26), 2)
+				pygame.draw.rect(self, (95, 255, 177), (offset -2, globals.HEIGHT - 36,(text_width+3), 26), 2)
 			self.blit(text, (offset, 450))
-			
+
 			offset = offset + 160 + (text_width - 100)
-		
+
 		super(Footer, self).update(*args, **kwargs)
 
 
@@ -150,10 +151,10 @@ class Map(game.Entity):
 	def render(self, *args, **kwargs):
 		self.fill((0, 0, 0))
 		# if self._fetching.is_alive():
-		# 	pygame.draw.circle(self, (255, 255, 255), (11, 11), self._loading_size)
-		# 	self._loading_size += 1
-		# 	if self._loading_size >= 10:
-		# 		self._loading_size = 0
+		#	   pygame.draw.circle(self, (255, 255, 255), (11, 11), self._loading_size)
+		#	   self._loading_size += 1
+		#	   if self._loading_size >= 10:
+		#			   self._loading_size = 0
 		# else:
 		self.blit(self._map_surface, (0, 0), area=self._render_rect)
 		super(Map, self).render(*args, **kwargs)
@@ -163,15 +164,15 @@ class Map(game.Entity):
 
 	def redraw_map(self, coef=1):
 		self._map_surface.fill((0, 0, 0))
-		for way in self._mapper.transpose_ways((self._size/coef, self._size/coef), (self._size / 2, self._size / 2)):
+		for way in self._mapper.transpose_ways((self._size /coef, self._size/coef), (self._size / 2, self._size / 2)):
 			pygame.draw.lines(
-				self._map_surface,
-				(85, 251, 167),
-				False,
-				way,
-				2
+					self._map_surface,
+					(85, 251, 167),
+					False,
+					way,
+					2
 			)
-		for tag in self._mapper.transpose_tags((self._size/coef, self._size/coef), (self._size / 2, self._size / 2)):
+		for tag in self._mapper.transpose_tags((self._size /coef, self._size/coef), (self._size / 2, self._size / 2)):
 			try:
 				basicFont = pygame.font.SysFont(None, 18)
 				text = basicFont.render("%s" % tag[0], True, (95, 255, 177), (0, 0, 0))
@@ -179,16 +180,16 @@ class Map(game.Entity):
 				pygame.draw.rect(
 				self._map_surface,
 				(0, 0, 0),
-				(tag[1]-5,tag[2]-5,text_width+10,25),
+				(tag[1] -5,tag[2]-5,text_width+10,25),
 				0
-			    )
-				self._map_surface.blit(text, (tag[1],tag[2]))
+			)
+				self._map_surface.blit(text, (tag[1], tag[2]))
 				pygame.draw.rect(
 				self._map_surface,
 				(95, 255, 177),
-				(tag[1]-5,tag[2]-5,text_width+10,25),
+				(tag[1] -5,tag[2]-5,text_width+10,25),
 				1
-			    )
+			)
 			except Exception, e:
 				print(e)
 				pass
@@ -204,7 +205,7 @@ class MapSquare(game.Entity):
 	def __init__(self, size, map_position, *args, **kwargs):
 		self._mapper = game.data.Maps()
 		self._size = size
-		self._map_surface = pygame.Surface((size*2, size*2))
+		self._map_surface = pygame.Surface((size *2, size*2))
 		self.map_position = map_position
 		super(MapSquare, self).__init__((size, size), *args, **kwargs)
 
@@ -226,15 +227,15 @@ class MapSquare(game.Entity):
 
 	def redraw_map(self, coef=1):
 		self._map_surface.fill((0, 0, 0))
-		for way in self._mapper.transpose_ways((self._size, self._size), (self._size/2, self._size/2)):
+		for way in self._mapper.transpose_ways((self._size, self._size), (self._size /2, self._size/2)):
 			pygame.draw.lines(
-				self._map_surface,
-				(85, 251, 167),
-				False,
-				way,
-				2
+					self._map_surface,
+					(85, 251, 167),
+					False,
+					way,
+					2
 			)
-		for tag in self._mapper.transpose_tags((self._size, self._size), (self._size/2, self._size/2)):
+		for tag in self._mapper.transpose_tags((self._size, self._size), (self._size /2, self._size/2)):
 			try:
 				basicFont = pygame.font.SysFont(None, 18)
 				text = basicFont.render("%s" % tag[0], True, (95, 255, 177), (0, 0, 0))
@@ -242,16 +243,16 @@ class MapSquare(game.Entity):
 				pygame.draw.rect(
 				self._map_surface,
 				(0, 0, 0),
-				(tag[1]-5,tag[2]-5,text_width+10,25),
+				(tag[1] -5,tag[2]-5,text_width+10,25),
 				0
-			    )
-				self._map_surface.blit(text, (tag[1],tag[2]))
+			)
+				self._map_surface.blit(text, (tag[1], tag[2]))
 				pygame.draw.rect(
 				self._map_surface,
 				(95, 255, 177),
-				(tag[1]-5,tag[2]-5,text_width+10,25),
+				(tag[1] -5,tag[2]-5,text_width+10,25),
 				1
-			    )
+			)
 			except Exception, e:
 				print(e)
 				pass
@@ -273,12 +274,12 @@ class MapGrid(game.Entity):
 		for x in range(10):
 			for y in range(10):
 				square = MapSquare(
-						100,
-						(
-							self._starting_position[0] + (self._delta * x),
-							self._starting_position[1] - (self._delta * y)
+								100,
+								(
+										self._starting_position[0] + (self._delta * x),
+										self._starting_position[1] - (self._delta * y)
+								)
 						)
-					)
 				square.fetch_map()
 				square.position = (100 * x, 100 * y)
 				self._grid.append(square)
