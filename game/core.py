@@ -25,14 +25,14 @@ class Engine(object):
 	def update(self):
 		for child in self._children.values():
 			child.update()
-			
+
 	def rem(self, child):
 		try:
 			del self._children[child]
 			print "%s: removed %s" % (self, child)
 		except:
 			pass
-		
+
 	def get(self, child):
 		return self._children[child]
 
