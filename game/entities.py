@@ -235,27 +235,27 @@ class MapSquare(game.Entity):
 					way,
 					2
 			)
-		for tag in self._mapper.transpose_tags((self._size, self._size), (self._size /2, self._size/2)):
-			try:
-				basicFont = pygame.font.SysFont(None, 18)
-				text = basicFont.render("%s" % tag[0], True, (95, 255, 177), (0, 0, 0))
-				text_width = text.get_size()[0]
-				pygame.draw.rect(
-				self._map_surface,
-				(0, 0, 0),
-				(tag[1] -5,tag[2]-5,text_width+10,25),
-				0
-			)
-				self._map_surface.blit(text, (tag[1], tag[2]))
-				pygame.draw.rect(
-				self._map_surface,
-				(95, 255, 177),
-				(tag[1] -5,tag[2]-5,text_width+10,25),
-				1
-			)
-			except Exception, e:
-				print(e)
-				pass
+		# for tag in self._mapper.transpose_tags((self._size, self._size), (self._size /2, self._size/2)):
+		# 	try:
+		# 		basicFont = pygame.font.SysFont(None, 18)
+		# 		text = basicFont.render("%s" % tag[0], True, (95, 255, 177), (0, 0, 0))
+		# 		text_width = text.get_size()[0]
+		# 		pygame.draw.rect(
+		# 			self._map_surface,
+		# 			(0, 0, 0),
+		# 			(tag[1] -5,tag[2]-5,text_width+10,25),
+		# 			0
+		# 		)
+		# 		self._map_surface.blit(text, (tag[1], tag[2]))
+		# 		pygame.draw.rect(
+		# 			self._map_surface,
+		# 			(95, 255, 177),
+		# 			(tag[1] -5,tag[2]-5,text_width+10,25),
+		# 			1
+		# 		)
+		# 	except Exception, e:
+		# 		print(e)
+		# 		pass
 
 
 class MapGrid(game.Entity):
@@ -274,14 +274,14 @@ class MapGrid(game.Entity):
 		for x in range(10):
 			for y in range(10):
 				square = MapSquare(
-								100,
+								150,
 								(
 										self._starting_position[0] + (self._delta * x),
 										self._starting_position[1] - (self._delta * y)
 								)
 						)
 				square.fetch_map()
-				square.position = (100 * x, 100 * y)
+				square.position = (150 * x, 150 * y)
 				self._grid.append(square)
 
 	def render(self, *args, **kwargs):

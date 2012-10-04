@@ -4,6 +4,8 @@ from collections import OrderedDict
 class Engine(object):
 
 	_children = OrderedDict()
+	EVENTS_UPDATE = pygame.USEREVENT + 1
+	EVENTS_RENDER = pygame.USEREVENT + 2
 
 	def __init__(self, title, width, height, *args, **kwargs):
 		super(Engine, self).__init__(*args, **kwargs)
