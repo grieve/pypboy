@@ -13,7 +13,7 @@ class Maps(object):
 	height = 0
 
 	SIG_PLACES = 3
-	GRID_SIZE = 0.001;
+	GRID_SIZE = 0.001
 
 	def __init__(self, *args, **kwargs):
 		super(Maps, self).__init__(*args, **kwargs)

@@ -1,2 +1,0 @@
-DISPLAY = 0
-LABEL = "STATS"

@@ -1,10 +1,9 @@
-import game.globals
-import pypboy
-import modules
+import pygame
+pygame.mixer.init(44100, -16, 2, 2048)
 
-from modules.data import Module
+import game.globals
+from pypboy.core import Pypboy
 
 if __name__ == "__main__":
-	module = Module()
-	boy = pypboy.Pypboy('Pip-Boy 3000', game.globals.WIDTH, game.globals.HEIGHT)
+	boy = Pypboy('Pip-Boy 3000', game.globals.WIDTH, game.globals.HEIGHT)
 	boy.run()
