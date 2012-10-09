@@ -12,7 +12,7 @@ class Module(pypboy.SubModule):
 
 	def __init__(self, *args, **kwargs):
 		super(Module, self).__init__(*args, **kwargs)
-		mapgrid = MapGrid((-5.936, 54.593), (game.globals.WIDTH - 8, game.globals.HEIGHT - 80))
+		mapgrid = MapGrid((-5.936, 54.593), (config.WIDTH - 8, config.HEIGHT - 80))
 		mapgrid.position = (4, 0)
 		self.add(mapgrid)
 

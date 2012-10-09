@@ -1,5 +1,6 @@
 import pygame
-import game.globals
+import game
+import config
 import pypboy.ui
 
 
@@ -8,7 +9,7 @@ class BaseModule(game.Entity):
 	submodules = []
 
 	def __init__(self, *args, **kwargs):
-		super(BaseModule, self).__init__((game.globals.WIDTH, game.globals.HEIGHT - 40))
+		super(BaseModule, self).__init__((config.WIDTH, config.HEIGHT - 40))
 		self.position = (0, 40)
 
 		self.footer = pypboy.ui.Footer()
@@ -16,7 +17,7 @@ class BaseModule(game.Entity):
 		for mod in self.submodules:
 			self.footer.menu.append(mod.label)
 		self.footer.selected = self.footer.menu[0]
-		self.footer.position = (0, game.globals.HEIGHT - 80)
+		self.footer.position = (0, config.HEIGHT - 80)
 		self.add(self.footer)
 
 		self.init_submodules()
@@ -29,7 +30,7 @@ class BaseModule(game.Entity):
 		self.module_change_sfx = pygame.mixer.Sound('sounds/module_change.ogg')
 
 	def init_submodules(self):
-		self.module_surface = game.core.Entity((game.globals.WIDTH - 8, game.globals.HEIGHT - 80))
+		self.module_surface = game.core.Entity((config.WIDTH - 8, config.HEIGHT - 80))
 		self.add(self.module_surface)
 		self.active = self.submodules[0]
 
@@ -70,7 +71,7 @@ class BaseModule(game.Entity):
 class SubModule(game.Entity):
 
 	def __init__(self, *args, **kwargs):
-		super(SubModule, self).__init__((game.globals.WIDTH - 8, game.globals.HEIGHT - 80))
+		super(SubModule, self).__init__((config.WIDTH - 8, config.HEIGHT - 80))
 
 		self.action_handlers = {
 			"pause": self.handle_pause,
