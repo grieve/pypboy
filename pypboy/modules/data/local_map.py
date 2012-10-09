@@ -3,6 +3,7 @@ import pypboy.data
 import pygame
 import threading
 import game
+import config
 
 
 class Module(pypboy.SubModule):
@@ -28,6 +29,7 @@ class MapSquare(game.Entity):
 		self._size = size
 		self._map_surface = pygame.Surface((size * 2, size * 2))
 		self.map_position = map_position
+		self.tags = {}
 		super(MapSquare, self).__init__((size, size), *args, **kwargs)
 
 	def fetch_map(self):
@@ -56,27 +58,8 @@ class MapSquare(game.Entity):
 					way,
 					1
 			)
-		# for tag in self._mapper.transpose_tags((self._size, self._size), (self._size /2, self._size/2)):
-		# 	try:
-		# 		basicFont = pygame.font.SysFont(None, 18)
-		# 		text = basicFont.render("%s" % tag[0], True, (95, 255, 177), (0, 0, 0))
-		# 		text_width = text.get_size()[0]
-		# 		pygame.draw.rect(
-		# 			self._map_surface,
-		# 			(0, 0, 0),
-		# 			(tag[1] -5,tag[2]-5,text_width+10,25),
-		# 			0
-		# 		)
-		# 		self._map_surface.blit(text, (tag[1], tag[2]))
-		# 		pygame.draw.rect(
-		# 			self._map_surface,
-		# 			(95, 255, 177),
-		# 			(tag[1] -5,tag[2]-5,text_width+10,25),
-		# 			1
-		# 		)
-		# 	except Exception, e:
-		# 		print(e)
-		# 		pass
+		for tag in self._mapper.transpose_tags((self._size, self._size), (self._size / 2, self._size / 2)):
+			self.tags[tag[0]] = (tag[1] + self.position[0], tag[2] + self.position[1], tag[3])
 
 
 class MapGrid(game.Entity):
@@ -88,25 +71,57 @@ class MapGrid(game.Entity):
 	def __init__(self, starting_position, dimensions, *args, **kwargs):
 		self._grid = []
 		self._starting_position = starting_position
+		self._tag_surface = pygame.Surface(dimensions)
 		super(MapGrid, self).__init__(dimensions, *args, **kwargs)
+		self.tags = {}
 		self.test_fetch()
 
 	def test_fetch(self):
 		for x in range(10):
 			for y in range(5):
 				square = MapSquare(
-					50,
+					100,
 					(
 						self._starting_position[0] + (self._delta * x),
 						self._starting_position[1] - (self._delta * y)
 					)
 				)
 				square.fetch_map()
-				square.position = (50 * x, 50 * y)
+				square.position = (100 * x, 100 * y)
 				self._grid.append(square)
+
+	def draw_tags(self):
+		self.tags = {}
+		for square in self._grid:
+			self.tags.update(square.tags)
+		self._tag_surface.fill((0, 0, 0))
+		for name in self.tags:
+			image = config.AMENITIES[self.tags[name][2]]
+			self.blit(image, (self.tags[name][0], self.tags[name][1]))
+			# try:
+			basicFont = pygame.font.SysFont(None, 12)
+			text = basicFont.render(name, True, (95, 255, 177), (0, 0, 0))
+			# text_width = text.get_size()[0]
+			# 	pygame.draw.rect(
+			# 		self,
+			# 		(0, 0, 0),
+			# 		(self.tags[name][0], self.tags[name][1], text_width + 4, 15),
+			# 		0
+			# 	)
+			self.blit(text, (self.tags[name][0] + 15, self.tags[name][1]))
+			# 	pygame.draw.rect(
+			# 		self,
+			# 		(95, 255, 177),
+			# 		(self.tags[name][0], self.tags[name][1], text_width + 4, 15),
+			# 		1
+			# 	)
+			# except Exception, e:
+			# 	print(e)
+			# 	pass
 
 	def render(self, *args, **kwargs):
 		self.fill((0, 0, 0))
 		for square in self._grid:
 			self.blit(square._map_surface, square.position)
+		self.draw_tags()
 		super(MapGrid, self).render(*args, **kwargs)

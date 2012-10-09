@@ -15,3 +15,23 @@ ACTIONS = {
 	pygame.K_UP: "dial_up",
 	pygame.K_DOWN: "dial_down"
 }
+
+
+MAP_ICONS = {
+	"camp": pygame.image.load('images/map_icons/camp.png'),
+	"factory": pygame.image.load('images/map_icons/factory.png'),
+	"metro": pygame.image.load('images/map_icons/metro.png'),
+	"misc": pygame.image.load('images/map_icons/misc.png'),
+	"monument": pygame.image.load('images/map_icons/monument.png'),
+	"vault": pygame.image.load('images/map_icons/vault.png'),
+}
+
+AMENITIES = {
+	'fast_food': MAP_ICONS['camp'],
+	'drinking_water': MAP_ICONS['camp'],
+	'cinema': MAP_ICONS['factory'],
+	'restaurant': MAP_ICONS['monument'],
+	'pub': MAP_ICONS['vault'],
+	'nightclub': MAP_ICONS['vault'],
+	'cafe': MAP_ICONS['monument']
+}

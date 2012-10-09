@@ -69,7 +69,10 @@ class Maps(object):
 						try:
 							#Named Amenities
 							if tag["@k"] == "name":
-								self.tags.append((float(node['@lat']), float(node['@lon']), tag["@v"]))
+								for tag2 in node['tag']:
+									if tag2["@k"] == "amenity":
+										amenity = tag2["@v"]
+								self.tags.append((float(node['@lat']), float(node['@lon']), tag["@v"], amenity))
 							#Personal Addresses - Removed
 							#if tag["@k"] == "addr:housenumber":
 							#	   for t2 in node['tag']:
@@ -130,7 +133,8 @@ class Maps(object):
 			wp = [
 							tag[2],
 							(lat * w_coef) + offset[0],
-							(lng * h_coef) + offset[1]
+							(lng * h_coef) + offset[1],
+							tag[3]
 			]
 			if flip_y:
 				wp[2] *= -1
