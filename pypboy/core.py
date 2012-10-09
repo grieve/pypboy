@@ -12,7 +12,6 @@ class Pypboy(game.core.Engine):
 
 	def __init__(self, *args, **kwargs):
 		super(Pypboy, self).__init__(*args, **kwargs)
-
 		self.init_children()
 		self.init_modules()
 
@@ -21,7 +20,7 @@ class Pypboy(game.core.Engine):
 		self.add(overlay, 100)
 		border = pypboy.ui.Border()
 		self.add(border, 9999)
-		self.header = pypboy.ui.Header("DATA", "The Gasworks")
+		self.header = pypboy.ui.Header("SCREEN", "Headline")
 		self.add(self.header, 10)
 		scanlines = pypboy.ui.Scanlines(800, 480, 3, 1, [(0, 13, 3, 50), (6, 42, 22, 100), (0, 13, 3, 50)])
 		self.add(scanlines, 999)
@@ -30,14 +29,14 @@ class Pypboy(game.core.Engine):
 
 	def init_modules(self):
 		self.modules = {
-			"data": data.Module(),
-			"items": items.Module(),
-			"stats": stats.Module()
+			"data": data.Module(self),
+			"items": items.Module(self),
+			"stats": stats.Module(self)
 		}
-		self.active = self.modules["data"]
 		self.module_surface = game.core.Entity((config.WIDTH - 8, config.HEIGHT - 40))
 		self.module_surface.position = (4, 40)
 		self.add(self.module_surface, 10)
+		self.switch_module("data")
 
 	def update(self):
 		self.active.update()
@@ -50,8 +49,10 @@ class Pypboy(game.core.Engine):
 
 	def switch_module(self, module):
 		if module in self.modules:
-			self.active.handle_action("pause")
+			if hasattr(self, 'active'):
+				self.active.handle_action("pause")
 			self.active = self.modules[module]
+			self.active.parent = self
 			self.active.handle_action("resume")
 		else:
 			print "Module '%s' not implemented." % module

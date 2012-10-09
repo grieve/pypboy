@@ -10,13 +10,12 @@ class Module(BaseModule):
 
 	label = "STATS"
 
-	submodules = [
-		status.Module(),
-		special.Module(),
-		skills.Module(),
-		perks.Module(),
-		general.Module()
-	]
-
 	def __init__(self, *args, **kwargs):
+		self.submodules = [
+			status.Module(self),
+			special.Module(self),
+			skills.Module(self),
+			perks.Module(self),
+			general.Module(self)
+		]
 		super(Module, self).__init__(*args, **kwargs)

@@ -8,8 +8,9 @@ class BaseModule(game.Entity):
 
 	submodules = []
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self, boy, *args, **kwargs):
 		super(BaseModule, self).__init__((config.WIDTH, config.HEIGHT - 40))
+		self.pypboy = boy
 		self.position = (0, 40)
 
 		self.footer = pypboy.ui.Footer()
@@ -32,13 +33,14 @@ class BaseModule(game.Entity):
 	def init_submodules(self):
 		self.module_surface = game.core.Entity((config.WIDTH - 8, config.HEIGHT - 80))
 		self.add(self.module_surface)
-		self.active = self.submodules[0]
+		self.switch_submodule(0)
 
 	def switch_submodule(self, module):
 		if hasattr(self, 'active') and self.active:
 			self.active.handle_action("pause")
 		if len(self.submodules) > module:
 			self.active = self.submodules[module]
+			self.active.parent = self
 			self.active.handle_action("resume")
 			self.footer.selected = self.footer.menu[module]
 		else:
@@ -70,8 +72,9 @@ class BaseModule(game.Entity):
 
 class SubModule(game.Entity):
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self, parent, *args, **kwargs):
 		super(SubModule, self).__init__((config.WIDTH - 8, config.HEIGHT - 80))
+		self.parent = parent
 
 		self.action_handlers = {
 			"pause": self.handle_pause,

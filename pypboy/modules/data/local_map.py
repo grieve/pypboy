@@ -12,9 +12,14 @@ class Module(pypboy.SubModule):
 
 	def __init__(self, *args, **kwargs):
 		super(Module, self).__init__(*args, **kwargs)
-		mapgrid = MapGrid((-5.936, 54.593), (config.WIDTH - 8, config.HEIGHT - 80))
+		mapgrid = MapGrid((-5.9302032, 54.5966701), (config.WIDTH - 8, config.HEIGHT - 80))
 		mapgrid.position = (4, 0)
 		self.add(mapgrid)
+
+	def handle_resume(self):
+		self.parent.pypboy.header.headline = "DATA"
+		self.parent.pypboy.header.title = "Farset's Mouth"
+		super(Module, self).handle_resume()
 
 
 class MapSquare(game.Entity):
@@ -45,7 +50,7 @@ class MapSquare(game.Entity):
 
 	def render(self, *args, **kwargs):
 		self.fill((0, 0, 0))
-		self.blit(self._map_surface, (0, 0))
+		self.blit(self._map_surface, (-self._size / 2, -self._size / 2))
 		super(MapSquare, self).render(*args, **kwargs)
 
 	def redraw_map(self, coef=1):
@@ -71,10 +76,11 @@ class MapGrid(game.Entity):
 	def __init__(self, starting_position, dimensions, *args, **kwargs):
 		self._grid = []
 		self._starting_position = starting_position
+		self.dimensions = dimensions
 		self._tag_surface = pygame.Surface(dimensions)
 		super(MapGrid, self).__init__(dimensions, *args, **kwargs)
 		self.tags = {}
-		self.test_fetch()
+		self.fetch_outwards()
 
 	def test_fetch(self):
 		for x in range(10):
@@ -90,13 +96,33 @@ class MapGrid(game.Entity):
 				square.position = (100 * x, 100 * y)
 				self._grid.append(square)
 
+	def fetch_outwards(self):
+		for x in range(-4, 4):
+			for y in range(-2, 2):
+				square = MapSquare(
+					86,
+					(
+						self._starting_position[0] + (self._delta * x),
+						self._starting_position[1] - (self._delta * y)
+					)
+				)
+				square.fetch_map()
+				square.position = ((86 * x) + (self.dimensions[0] / 2) - 43, (86 * y) + (self.dimensions[1] / 2) - 43)
+				self._grid.append(square)
+
+
 	def draw_tags(self):
 		self.tags = {}
 		for square in self._grid:
 			self.tags.update(square.tags)
 		self._tag_surface.fill((0, 0, 0))
 		for name in self.tags:
-			image = config.AMENITIES[self.tags[name][2]]
+			if self.tags[name][2] in config.AMENITIES:
+				image = config.AMENITIES[self.tags[name][2]]
+			else:
+				print "Unknown amenity: %s" % self.tags[name][2]
+				image = config.MAP_ICONS['misc']
+			pygame.transform.scale(image, (10, 10))
 			self.blit(image, (self.tags[name][0], self.tags[name][1]))
 			# try:
 			basicFont = pygame.font.SysFont(None, 12)
@@ -108,7 +134,7 @@ class MapGrid(game.Entity):
 			# 		(self.tags[name][0], self.tags[name][1], text_width + 4, 15),
 			# 		0
 			# 	)
-			self.blit(text, (self.tags[name][0] + 15, self.tags[name][1]))
+			self.blit(text, (self.tags[name][0] + 17, self.tags[name][1] + 4))
 			# 	pygame.draw.rect(
 			# 		self,
 			# 		(95, 255, 177),

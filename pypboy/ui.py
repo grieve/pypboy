@@ -6,13 +6,13 @@ import datetime
 
 class Header(game.Entity):
 
-	_headline = "HEADER"
-	_title = "Title"
+	headline = "HEADER"
+	title = "Title"
 	_date = ""
 
 	def __init__(self, headline, title):
-		self._headline = headline
-		self._title = title
+		self.headline = headline
+		self.title = title
 		super(Header, self).__init__((config.WIDTH, config.HEIGHT))
 
 	def update(self, *args, **kwargs):
@@ -27,9 +27,9 @@ class Header(game.Entity):
 		pygame.draw.line(self, (95, 255, 177), (config.WIDTH - 13, 15), (config.WIDTH - 13, 35), 2)
 
 		basicFont = pygame.font.SysFont(None, 17)
-		text = basicFont.render("   %s   " % self._headline, True, (105, 251, 187), (0, 0, 0))
+		text = basicFont.render("   %s   " % self.headline, True, (105, 251, 187), (0, 0, 0))
 		self.blit(text, (26, 8))
-		text = basicFont.render(self._title, True, (95, 255, 177), (0, 0, 0))
+		text = basicFont.render(self.title, True, (95, 255, 177), (0, 0, 0))
 		self.blit(text, ((config.WIDTH - 124) - text.get_width() - 10, 19))
 		text = basicFont.render(self._date, True, (95, 255, 177), (0, 0, 0))
 		self.blit(text, ((config.WIDTH - 111), 19))

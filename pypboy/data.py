@@ -59,7 +59,13 @@ class Maps(object):
 						bounds[2],
 						bounds[3]
 				)
-		response = requests.get(url)
+		while True:
+			try:
+				response = requests.get(url)
+			except:
+				pass
+			else:
+				break
 		osm_dict = xmltodict.parse(response.text.encode('UTF-8'))
 		try:
 			for node in osm_dict['osm']['node']:

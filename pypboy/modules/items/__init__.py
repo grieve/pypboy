@@ -10,13 +10,12 @@ class Module(BaseModule):
 
 	label = "ITEMS"
 
-	submodules = [
-		weapons.Module(),
-		apparel.Module(),
-		aid.Module(),
-		misc.Module(),
-		ammo.Module()
-	]
-
 	def __init__(self, *args, **kwargs):
+		self.submodules = [
+			weapons.Module(self),
+			apparel.Module(self),
+			aid.Module(self),
+			misc.Module(self),
+			ammo.Module(self)
+		]
 		super(Module, self).__init__(*args, **kwargs)
