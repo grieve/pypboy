@@ -13,23 +13,26 @@ class Header(game.Entity):
 		self.rect[0] = 4
 
 	def update(self, *args, **kwargs):
-		self._date = datetime.datetime.now().strftime("%d.%m.%y.%H:%M:%S")
 		super(Header, self).update(*args, **kwargs)
 
 	def render(self, *args, **kwargs):
-		pygame.draw.line(self.image, (95, 255, 177), (5, 15), (5, 35), 2)
-		pygame.draw.line(self.image, (95, 255, 177), (5, 15), (config.WIDTH - 124, 15), 2)
-		pygame.draw.line(self.image, (95, 255, 177), (config.WIDTH - 124, 15), (config.WIDTH - 124, 35), 2)
-		pygame.draw.line(self.image, (95, 255, 177), (config.WIDTH - 120, 15), (config.WIDTH - 13, 15), 2)
-		pygame.draw.line(self.image, (95, 255, 177), (config.WIDTH - 13, 15), (config.WIDTH - 13, 35), 2)
+		new_date = datetime.datetime.now().strftime("%d.%m.%y.%H:%M:%S")
+		if new_date != self._date:
+			self.image.fill((0, 0, 0))
+			pygame.draw.line(self.image, (95, 255, 177), (5, 15), (5, 35), 2)
+			pygame.draw.line(self.image, (95, 255, 177), (5, 15), (config.WIDTH - 124, 15), 2)
+			pygame.draw.line(self.image, (95, 255, 177), (config.WIDTH - 124, 15), (config.WIDTH - 124, 35), 2)
+			pygame.draw.line(self.image, (95, 255, 177), (config.WIDTH - 120, 15), (config.WIDTH - 13, 15), 2)
+			pygame.draw.line(self.image, (95, 255, 177), (config.WIDTH - 13, 15), (config.WIDTH - 13, 35), 2)
 
-		basicFont = pygame.font.SysFont(None, 17)
-		text = basicFont.render("   %s   " % self.headline, True, (105, 251, 187), (0, 0, 0))
-		self.image.blit(text, (26, 8))
-		text = basicFont.render(self.title, True, (95, 255, 177), (0, 0, 0))
-		self.image.blit(text, ((config.WIDTH - 124) - text.get_width() - 10, 19))
-		text = basicFont.render(self._date, True, (95, 255, 177), (0, 0, 0))
-		self.image.blit(text, ((config.WIDTH - 111), 19))
+			basicFont = pygame.font.SysFont(None, 17)
+			text = basicFont.render("   %s   " % self.headline, True, (105, 251, 187), (0, 0, 0))
+			self.image.blit(text, (26, 8))
+			text = basicFont.render(self.title, True, (95, 255, 177), (0, 0, 0))
+			self.image.blit(text, ((config.WIDTH - 124) - text.get_width() - 10, 19))
+			text = basicFont.render(self._date, True, (95, 255, 177), (0, 0, 0))
+			self.image.blit(text, ((config.WIDTH - 111), 19))
+			self._date = new_date
 
 		super(Header, self).update(*args, **kwargs)
 
@@ -45,7 +48,8 @@ class Footer(game.Entity):
 	def update(self, *args, **kwargs):
 		super(Footer, self).update(*args, **kwargs)
 
-	def render(self, *args, **kwargs):
+	def select(self, module):
+		self.selected = module
 		self.image.fill((0, 0, 0))
 		pygame.draw.line(self.image, (95, 255, 177), (5, 2), (5, 20), 2)
 		pygame.draw.line(self.image, (95, 255, 177), (5, 20), (config.WIDTH - 13, 20), 2)
@@ -62,8 +66,6 @@ class Footer(game.Entity):
 			self.image.blit(text, (offset, 12))
 
 			offset = offset + 120 + (text_width - 100)
-
-		super(Footer, self).update(*args, **kwargs)
 
 
 class Scanlines(game.Entity):

@@ -19,7 +19,7 @@ class Engine(object):
 		self.background.fill((0, 0, 0))
 
 	def render(self):
-		#self.root_children.clear(self.screen, self.background)
+		self.root_children.clear(self.screen, self.background)
 		self.root_children.render()
 		self.root_children.draw(self.screen)
 		for group in self.groups:
