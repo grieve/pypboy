@@ -3,8 +3,6 @@ import pygame
 
 class Engine(object):
 
-	_children = []
-	_layers = []
 	EVENTS_UPDATE = pygame.USEREVENT + 1
 	EVENTS_RENDER = pygame.USEREVENT + 2
 
@@ -12,68 +10,56 @@ class Engine(object):
 		super(Engine, self).__init__(*args, **kwargs)
 		self.window = pygame.display.set_mode((width, height))
 		self.screen = pygame.display.get_surface()
-		self.screen.fill((0, 23, 3))
 		pygame.display.set_caption(title)
 		pygame.font.init()
 
-	def render(self):
-		self.screen.fill((0, 0, 0))
-		if hasattr(self, 'graphic'):
-			self.screen.blit(self.graphic, (0, 0))
+		self.groups = []
+		self.root_children = EntityGroup()
+		self.background = pygame.surface.Surface(self.screen.get_size()).convert()
+		self.background.fill((0, 0, 0))
 
-		for layer in self._layers:
-			for child in layer:
-				child.render()
-				self.screen.blit(child, child.position)
+	def render(self):
+		self.root_children.clear(self.screen, self.background)
+		self.root_children.render()
+		self.root_children.draw(self.screen)
+		for group in self.groups:
+			group.render()
+			group.draw(self.screen)
 		pygame.display.flip()
 
 	def update(self):
-		for child in self._children:
-			child.update()
+		self.root_children.update()
+		for group in self.groups:
+			group.update()
 
-	# def rem(self, child):
-	# 	try:
-	# 		del self._children[child]
-	# 		print "%s: removed %s" % (self, child)
-	# 	except:
-	# 		pass
+	def add(self, group):
+		if group not in self.groups:
+			self.groups.append(group)
 
-	# def get(self, child):
-	# 	return self._children[child]
-
-	def add(self, child, layer=0):
-		if isinstance(child, pygame.Surface):
-			if len(self._layers) <= layer:
-				for i in range((layer + 1) - len(self._layers)):
-					self._layers.append([])
-			self._children.append(child)
-			self._layers[layer].append(child)
-			print "%s: added %s" % (self, child)
-		else:
-			raise Exception("Child must be pygame.Surface")
+	def remove(self, group):
+		if group in self.groups:
+			self.groups.remove(group)
 
 
-class Entity(pygame.Surface):
 
-	def __init__(self, size, *args, **kwargs):
-		self._children = []
-		self.position = (0, 0)
-		super(Entity, self).__init__(size, flags=pygame.SRCALPHA, *args, **kwargs)
+class EntityGroup(pygame.sprite.LayeredDirty):
+	def render(self):
+		for entity in self:
+			entity.render()
+
+
+class Entity(pygame.sprite.DirtySprite):
+	def __init__(self, dimensions=(0, 0), layer=0, *args, **kwargs):
+		super(Entity, self).__init__(*args, **kwargs)
+		self.image= pygame.surface.Surface(dimensions)
+		self.rect = self.image.get_rect()
+		self.groups = pygame.sprite.LayeredDirty()
+		self.layer = layer
+		self.dirty = 1
+		self.blendmode = 0
 
 	def render(self, *args, **kwargs):
-		if hasattr(self, 'graphic'):
-			self.blit(self.graphic, (0, 0))
-		for child in self._children:
-			child.render()
-			self.blit(child, child.position)
+		pass
 
 	def update(self, *args, **kwargs):
-		for child in self._children:
-			child.update()
-
-	def add(self, child):
-		if isinstance(child, pygame.Surface):
-			self._children.append(child)
-			print "%s: added %s" % (self, child)
-		else:
-			raise Exception("Child must be pygame.Surface")
+		pass

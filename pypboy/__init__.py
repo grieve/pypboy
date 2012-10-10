@@ -4,12 +4,12 @@ import config
 import pypboy.ui
 
 
-class BaseModule(game.Entity):
+class BaseModule(game.EntityGroup):
 
 	submodules = []
 
 	def __init__(self, boy, *args, **kwargs):
-		super(BaseModule, self).__init__((config.WIDTH, config.HEIGHT - 40))
+		super(BaseModule, self).__init__()
 		self.pypboy = boy
 		self.position = (0, 40)
 
@@ -70,10 +70,10 @@ class BaseModule(game.Entity):
 		self.module_change_sfx.play()
 
 
-class SubModule(game.Entity):
+class SubModule(game.EntityGroup):
 
 	def __init__(self, parent, *args, **kwargs):
-		super(SubModule, self).__init__((config.WIDTH - 8, config.HEIGHT - 80))
+		super(SubModule, self).__init__()
 		self.parent = parent
 
 		self.action_handlers = {
