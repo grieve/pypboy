@@ -27,8 +27,8 @@ class BaseModule(game.EntityGroup):
 			"pause": self.handle_pause,
 			"resume": self.handle_resume
 		}
-
-		self.module_change_sfx = pygame.mixer.Sound('sounds/module_change.ogg')
+		if config.SOUND_ENABLED:
+			self.module_change_sfx = pygame.mixer.Sound('sounds/module_change.ogg')
 
 	def move(self, x, y):
 		super(BaseModule, self).move(x, y)
@@ -67,7 +67,8 @@ class BaseModule(game.EntityGroup):
 
 	def handle_resume(self):
 		self.paused = False
-		self.module_change_sfx.play()
+		if config.SOUND_ENABLED:
+			self.module_change_sfx.play()
 
 
 class SubModule(game.EntityGroup):
@@ -81,12 +82,14 @@ class SubModule(game.EntityGroup):
 			"resume": self.handle_resume
 		}
 
-		self.submodule_change_sfx = pygame.mixer.Sound('sounds/submodule_change.ogg')
-		self.dial_move_sfx = pygame.mixer.Sound('sounds/dial_move.ogg')
+		if config.SOUND_ENABLED:
+			self.submodule_change_sfx = pygame.mixer.Sound('sounds/submodule_change.ogg')
+			self.dial_move_sfx = pygame.mixer.Sound('sounds/dial_move.ogg')
 
 	def handle_action(self, action, value=0):
 		if action.startswith("dial_"):
-			self.dial_move_sfx.play()
+			if config.SOUND_ENABLED:
+				self.dial_move_sfx.play()
 			if action[4:] == "up":
 				pass
 			else:
@@ -99,4 +102,5 @@ class SubModule(game.EntityGroup):
 
 	def handle_resume(self):
 		self.paused = False
-		self.submodule_change_sfx.play()
+		if config.SOUND_ENABLED:
+			self.submodule_change_sfx.play()
