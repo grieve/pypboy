@@ -10,6 +10,7 @@ class Header(game.Entity):
 		self.headline = headline
 		self.title = title
 		super(Header, self).__init__((config.WIDTH, config.HEIGHT))
+		self.rect[0] = 4
 
 	def update(self, *args, **kwargs):
 		self._date = datetime.datetime.now().strftime("%d.%m.%y.%H:%M:%S")
@@ -38,6 +39,8 @@ class Footer(game.Entity):
 	def __init__(self):
 		self.menu = []
 		super(Footer, self).__init__((config.WIDTH, config.HEIGHT))
+		self.rect[0] = 4
+		self.rect[1] = config.HEIGHT - 40
 
 	def update(self, *args, **kwargs):
 		super(Footer, self).update(*args, **kwargs)
@@ -55,7 +58,7 @@ class Footer(game.Entity):
 			text_width = text.get_size()[0]
 			#print(m+" : "+str(text.get_size()))
 			if m == self.selected:
-				pygame.draw.rect(self, (95, 255, 177), (offset - 2, 6, (text_width + 3), 26), 2)
+				pygame.draw.rect(self.image, (95, 255, 177), (offset - 2, 6, (text_width + 3), 26), 2)
 			self.image.blit(text, (offset, 12))
 
 			offset = offset + 120 + (text_width - 100)

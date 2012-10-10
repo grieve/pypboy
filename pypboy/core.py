@@ -17,8 +17,8 @@ class Pypboy(game.core.Engine):
 
 	def init_children(self):
 		self.background = pygame.image.load('images/overlay.png')
-		border = pypboy.ui.Border()
-		self.root_children.add(border)
+		# border = pypboy.ui.Border()
+		# self.root_children.add(border)
 		self.header = pypboy.ui.Header()
 		self.root_children.add(self.header)
 		scanlines = pypboy.ui.Scanlines(800, 480, 3, 1, [(0, 13, 3, 50), (6, 42, 22, 100), (0, 13, 3, 50)])
@@ -32,6 +32,8 @@ class Pypboy(game.core.Engine):
 			#"items": items.Module(self),
 			"stats": stats.Module(self)
 		}
+		for module in self.modules.values():
+			module.move(4, 40)
 		self.switch_module("stats")
 
 	def update(self):

@@ -41,22 +41,25 @@ class Engine(object):
 			self.groups.remove(group)
 
 
-
 class EntityGroup(pygame.sprite.LayeredDirty):
 	def render(self):
 		for entity in self:
 			entity.render()
 
+	def move(self, x, y):
+		for child in self:
+			child.rect.move(x, y)
+
 
 class Entity(pygame.sprite.DirtySprite):
 	def __init__(self, dimensions=(0, 0), layer=0, *args, **kwargs):
 		super(Entity, self).__init__(*args, **kwargs)
-		self.image= pygame.surface.Surface(dimensions)
+		self.image = pygame.surface.Surface(dimensions)
 		self.rect = self.image.get_rect()
 		self.groups = pygame.sprite.LayeredDirty()
 		self.layer = layer
-		self.dirty = 1
-		self.blendmode = 0
+		self.dirty = 2
+		self.blendmode = pygame.BLEND_RGBA_ADD
 
 	def render(self, *args, **kwargs):
 		pass

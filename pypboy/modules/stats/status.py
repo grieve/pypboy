@@ -11,7 +11,14 @@ class Module(pypboy.SubModule):
 	def __init__(self, *args, **kwargs):
 		super(Module, self).__init__(*args, **kwargs)
 		health = Health()
+		health.rect[0] = 4
+		health.rect[1] = 40
 		self.add(health)
+
+	def handle_resume(self):
+		self.parent.pypboy.header.headline = "STATUS"
+		self.parent.pypboy.header.title = "Grieve - Level 27"
+		super(Module, self).handle_resume()
 
 
 class Health(game.Entity):

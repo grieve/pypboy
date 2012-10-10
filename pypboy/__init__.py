@@ -21,7 +21,7 @@ class BaseModule(game.EntityGroup):
 		self.footer.position = (0, config.HEIGHT - 80)
 		self.add(self.footer)
 
-		self.init_submodules()
+		self.switch_submodule(0)
 
 		self.action_handlers = {
 			"pause": self.handle_pause,
@@ -30,26 +30,26 @@ class BaseModule(game.EntityGroup):
 
 		self.module_change_sfx = pygame.mixer.Sound('sounds/module_change.ogg')
 
-	def init_submodules(self):
-		self.module_surface = game.core.Entity((config.WIDTH - 8, config.HEIGHT - 80))
-		self.add(self.module_surface)
-		self.switch_submodule(0)
+	def move(self, x, y):
+		super(BaseModule, self).move(x, y)
+		if hasattr(self, 'active'):
+			self.active.move(x, y)
 
 	def switch_submodule(self, module):
 		if hasattr(self, 'active') and self.active:
 			self.active.handle_action("pause")
+			self.remove(self.active)
 		if len(self.submodules) > module:
 			self.active = self.submodules[module]
 			self.active.parent = self
 			self.active.handle_action("resume")
 			self.footer.selected = self.footer.menu[module]
+			self.add(self.active)
 		else:
 			print "No submodule at %d" % module
 
 	def render(self):
 		self.active.render()
-		self.module_surface.fill((0, 0, 0))
-		self.module_surface.blit(self.active, (0, 0))
 		super(BaseModule, self).render()
 
 	def handle_action(self, action, value=0):
