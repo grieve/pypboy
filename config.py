@@ -1,7 +1,7 @@
 import pygame
 
 WIDTH = 480
-HEIGHT = 272
+HEIGHT = 360
 
 ACTIONS = {
 	pygame.K_F1: "module_stats",
