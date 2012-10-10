@@ -11,6 +11,7 @@ class Header(game.Entity):
 		self.title = title
 		super(Header, self).__init__((config.WIDTH, config.HEIGHT))
 		self.rect[0] = 4
+		self._date = None
 
 	def update(self, *args, **kwargs):
 		super(Header, self).update(*args, **kwargs)
