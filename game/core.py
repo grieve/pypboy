@@ -19,7 +19,7 @@ class Engine(object):
 		self.background.fill((0, 0, 0))
 
 	def render(self):
-		self.root_children.clear(self.screen, self.background)
+		#self.root_children.clear(self.screen, self.background)
 		self.root_children.render()
 		self.root_children.draw(self.screen)
 		for group in self.groups:
@@ -58,7 +58,7 @@ class Entity(pygame.sprite.DirtySprite):
 		self.rect = self.image.get_rect()
 		self.groups = pygame.sprite.LayeredDirty()
 		self.layer = layer
-		self.dirty = 2
+		self.dirty = 1
 		self.blendmode = pygame.BLEND_RGBA_ADD
 
 	def render(self, *args, **kwargs):
