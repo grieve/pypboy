@@ -27,3 +27,4 @@ class Health(game.Entity):
 		super(Health, self).__init__()
 		self.image = pygame.image.load('images/pipboy.png')
 		self.rect = self.image.get_rect()
+		self.image = self.image.convert()
