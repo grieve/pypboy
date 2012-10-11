@@ -1,6 +1,5 @@
 import pygame
 
-
 class Engine(object):
 
 	EVENTS_UPDATE = pygame.USEREVENT + 1
@@ -12,11 +11,14 @@ class Engine(object):
 		self.screen = pygame.display.get_surface()
 		pygame.display.set_caption(title)
 		pygame.font.init()
+		pygame.mouse.set_visible(False)
 
 		self.groups = []
 		self.root_children = EntityGroup()
 		self.background = pygame.surface.Surface(self.screen.get_size()).convert()
 		self.background.fill((0, 0, 0))
+
+		self.rescale = False
 
 	def render(self):
 		self.root_children.clear(self.screen, self.background)
@@ -58,7 +60,7 @@ class Entity(pygame.sprite.DirtySprite):
 		self.rect = self.image.get_rect()
 		self.groups = pygame.sprite.LayeredDirty()
 		self.layer = layer
-		self.dirty = 2
+		self.dirty = 1
 		self.blendmode = pygame.BLEND_RGBA_ADD
 
 	def render(self, *args, **kwargs):
