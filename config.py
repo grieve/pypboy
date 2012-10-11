@@ -3,6 +3,9 @@ import pygame
 WIDTH = 480
 HEIGHT = 360
 
+# OUTPUT_WIDTH = 480
+# OUTPUT_HEIGHT = 360
+
 ACTIONS = {
 	pygame.K_F1: "module_stats",
 	pygame.K_F2: "module_items",
