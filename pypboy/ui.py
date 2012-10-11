@@ -50,6 +50,7 @@ class Footer(game.Entity):
 		super(Footer, self).update(*args, **kwargs)
 
 	def select(self, module):
+		self.dirty = 1
 		self.selected = module
 		self.image.fill((0, 0, 0))
 		pygame.draw.line(self.image, (95, 255, 177), (5, 2), (5, 20), 2)
@@ -91,6 +92,7 @@ class Scanlines(game.Entity):
 
 	def render(self, *args, **kwargs):
 		self.rect[1] += 1
+		self.dirty = 1
 		if (self.rect[1] * self.speed) >= self.move:
 			self.rect[1] = 0
 		super(Scanlines, self).render(self, *args, **kwargs)
