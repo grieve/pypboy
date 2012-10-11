@@ -3,7 +3,7 @@ import config
 import game
 import pypboy.ui
 
-#from pypboy.modules import data
+from pypboy.modules import data
 #from pypboy.modules import items
 from pypboy.modules import stats
 
@@ -30,7 +30,7 @@ class Pypboy(game.core.Engine):
 
 	def init_modules(self):
 		self.modules = {
-			#"data": data.Module(self),
+			"data": data.Module(self),
 			#"items": items.Module(self),
 			"stats": stats.Module(self)
 		}
