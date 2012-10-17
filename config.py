@@ -6,6 +6,8 @@ HEIGHT = 360
 # OUTPUT_WIDTH = 480
 # OUTPUT_HEIGHT = 360
 
+MAP_FOCUS = (-5.9347681, 54.5889076)
+
 ACTIONS = {
 	pygame.K_F1: "module_stats",
 	pygame.K_F2: "module_items",
