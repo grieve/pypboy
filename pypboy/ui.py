@@ -50,7 +50,7 @@ class Footer(game.Entity):
 		super(Footer, self).update(*args, **kwargs)
 
 	def select(self, module):
-		self.dirty = 1
+		#self.dirty = 1
 		self.selected = module
 		self.image.fill((0, 0, 0))
 		pygame.draw.line(self.image, (95, 255, 177), (5, 2), (5, 20), 2)
