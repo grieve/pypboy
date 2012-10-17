@@ -61,7 +61,7 @@ class Entity(pygame.sprite.DirtySprite):
 		self.image = self.image.convert()
 		self.groups = pygame.sprite.LayeredDirty()
 		self.layer = layer
-		self.dirty = 1
+		self.dirty = 2
 		self.blendmode = pygame.BLEND_RGBA_ADD
 
 	def render(self, *args, **kwargs):
