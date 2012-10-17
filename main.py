@@ -1,6 +1,14 @@
 import pygame
 import config
 
+try:
+	import RPi.GPIO as GPIO
+	GPIO.setmode(GPIO.BOARD)
+	config.GPIO_AVAILABLE = True
+except Exception, e:
+	print "GPIO UNAVAILABLE (%s)" % e
+	config.GPIO_AVAILABLE = False
+
 from pypboy.core import Pypboy
 
 try:

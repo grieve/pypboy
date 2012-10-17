@@ -7,6 +7,9 @@ from pypboy.modules import data
 #from pypboy.modules import items
 from pypboy.modules import stats
 
+if config.GPIO_AVAILABLE:
+	import RPi.GPIO as GPIO
+
 
 class Pypboy(game.core.Engine):
 
@@ -16,6 +19,10 @@ class Pypboy(game.core.Engine):
 		super(Pypboy, self).__init__(*args, **kwargs)
 		self.init_children()
 		self.init_modules()
+		
+		self.gpio_actions = {}
+		if config.GPIO_AVAILABLE:
+			self.init_gpio_controls()
 
 	def init_children(self):
 		self.background = pygame.image.load('images/overlay.png')
@@ -37,6 +44,16 @@ class Pypboy(game.core.Engine):
 		for module in self.modules.values():
 			module.move(4, 40)
 		self.switch_module("stats")
+
+	def init_gpio_controls(self):
+		for pin in config.GPIO_ACTIONS.keys():
+			GPIO.setup(pin, GPIO.IN)
+			self.gpio_actions[pin] = config.GPIO_ACTIONS[pin]
+
+	def check_gpio_input(self):
+		for pin in self.gpio_actions.keys():
+			if GPIO.input(pin):
+				self.handle_action(self.gpio_actions[pin])
 
 	def update(self):
 		if hasattr(self, 'active'):
@@ -60,6 +77,13 @@ class Pypboy(game.core.Engine):
 		else:
 			print "Module '%s' not implemented." % module
 
+	def handle_action(self, action):
+		if action.startswith('module_'):
+			self.switch_module(action[7:])
+		else:
+			if hasattr(self, 'active'):
+				self.active.handle_action(action)
+
 	def run(self):
 		self.running = True
 		while self.running:
@@ -69,17 +93,13 @@ class Pypboy(game.core.Engine):
 						self.running = False
 					else:
 						if event.key in config.ACTIONS:
-							action = config.ACTIONS[event.key]
-							if action.startswith('module_'):
-								self.switch_module(action[7:])
-							else:
-								if hasattr(self, 'active'):
-									self.active.handle_action(config.ACTIONS[event.key])
+							self.handle_action(config.ACTIONS[event.key])
 				elif event.type == pygame.QUIT:
 					self.running = False
 
 			self.update()
 			self.render()
+			self.check_gpio_input()
 			pygame.time.wait(10)
 
 		try:
