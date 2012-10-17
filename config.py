@@ -26,13 +26,13 @@ GPIO_ACTIONS = {
 	10: "module_stats",
 	9: "module_items",
 	11: "module_data",
-	23:	"knob_1",
-	24: "knob_2",
-	25: "knob_3",
-	8: "knob_4",
-	7: "knob_5",
-	15: "dial_up",
-	18: "dial_down"
+	14:	"knob_1",
+	15: "knob_2",
+	18: "knob_3",
+	23: "knob_4",
+	24: "knob_5",
+	3: "dial_up",
+	4: "dial_down"
 }
 
 
