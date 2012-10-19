@@ -72,7 +72,7 @@ class Footer(game.Entity):
 
 class Scanlines(game.Entity):
 
-	def __init__(self, width, height, gap, speed, colours):
+	def __init__(self, width, height, gap, speed, colours, full_push=False):
 		super(Scanlines, self).__init__((width, height))
 		self.width = width
 		self.height = height
@@ -80,7 +80,9 @@ class Scanlines(game.Entity):
 		self.gap = gap
 		self.colours = colours
 		self.rect[1] = 0
+		self.top = 0.0
 		self.speed = speed
+		self.full_push =full_push
 		colour = 0
 		area = pygame.Rect(0, self.rect[1] * self.speed, self.width, self.gap)
 		while area.top <= self.height - self.gap:
@@ -90,11 +92,17 @@ class Scanlines(game.Entity):
 			if colour >= len(self.colours):
 				colour = 0
 
-	def render(self, *args, **kwargs):
-		self.rect[1] += 1
+	def render(self, interval, *args, **kwargs):
+		print interval, self.rect[1], self.top
+		self.top += self.speed * interval
+		self.rect[1] = self.top
 		self.dirty = 1
-		if (self.rect[1] * self.speed) >= self.move:
-			self.rect[1] = 0
+		if self.full_push:
+			if self.top >= self.height:
+				self.top = 0
+		else:
+			if (self.top * self.speed) >= self.move:
+				self.top = 0
 		super(Scanlines, self).render(self, *args, **kwargs)
 
 

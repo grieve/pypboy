@@ -1,4 +1,5 @@
 import pygame
+import time
 
 class Engine(object):
 
@@ -19,15 +20,23 @@ class Engine(object):
 		self.background.fill((0, 0, 0))
 
 		self.rescale = False
+		self.last_render_time = 0
 
 	def render(self):
+		if self.last_render_time == 0:
+			self.last_render_time = time.time()
+			return
+		else:
+			interval = time.time() - self.last_render_time
+			self.last_render_time = time.time()
 		self.root_children.clear(self.screen, self.background)
-		self.root_children.render()
+		self.root_children.render(interval)
 		self.root_children.draw(self.screen)
 		for group in self.groups:
-			group.render()
+			group.render(interval)
 			group.draw(self.screen)
 		pygame.display.flip()
+		return interval
 
 	def update(self):
 		self.root_children.update()
@@ -44,9 +53,9 @@ class Engine(object):
 
 
 class EntityGroup(pygame.sprite.LayeredDirty):
-	def render(self):
+	def render(self, interval):
 		for entity in self:
-			entity.render()
+			entity.render(interval)
 
 	def move(self, x, y):
 		for child in self:
@@ -64,7 +73,7 @@ class Entity(pygame.sprite.DirtySprite):
 		self.dirty = 2
 		self.blendmode = pygame.BLEND_RGBA_ADD
 
-	def render(self, *args, **kwargs):
+	def render(self, interval=0, *args, **kwargs):
 		pass
 
 	def update(self, *args, **kwargs):
