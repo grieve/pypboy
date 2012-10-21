@@ -9,7 +9,7 @@ from pypboy.modules.data import radio
 class Module(BaseModule):
 
 	label = "DATA"
-	GPIO_LED_ID = 22
+	GPIO_LED_ID = 23
 
 	def __init__(self, *args, **kwargs):
 		self.submodules = [

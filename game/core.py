@@ -8,7 +8,7 @@ class Engine(object):
 
 	def __init__(self, title, width, height, *args, **kwargs):
 		super(Engine, self).__init__(*args, **kwargs)
-		self.window = pygame.display.set_mode((width, height), pygame.DOUBLEBUF)
+		self.window = pygame.display.set_mode((width, height))
 		self.screen = pygame.display.get_surface()
 		pygame.display.set_caption(title)
 		pygame.font.init()

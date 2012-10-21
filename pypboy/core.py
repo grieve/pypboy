@@ -4,7 +4,7 @@ import game
 import pypboy.ui
 
 from pypboy.modules import data
-#from pypboy.modules import items
+from pypboy.modules import items
 from pypboy.modules import stats
 
 if config.GPIO_AVAILABLE:
@@ -30,15 +30,15 @@ class Pypboy(game.core.Engine):
 		# self.root_children.add(border)
 		self.header = pypboy.ui.Header()
 		self.root_children.add(self.header)
-		scanlines = pypboy.ui.Scanlines(800, 480, 3, 4, [(0, 13, 3, 50), (6, 42, 22, 100), (0, 13, 3, 50)])
+		scanlines = pypboy.ui.Scanlines(800, 480, 3, 1, [(0, 13, 3, 50), (6, 42, 22, 100), (0, 13, 3, 50)])
 		self.root_children.add(scanlines)
-		scanlines2 = pypboy.ui.Scanlines(800, 480, 8, 100, [(0, 10, 1, 0), (21, 62, 42, 90), (61, 122, 82, 100), (21, 62, 42, 90)] + [(0, 10, 1, 0) for x in range(50)], True)
+		scanlines2 = pypboy.ui.Scanlines(800, 480, 8, 40, [(0, 10, 1, 0), (21, 62, 42, 90), (61, 122, 82, 100), (21, 62, 42, 90)] + [(0, 10, 1, 0) for x in range(50)], True)
 		self.root_children.add(scanlines2)
 
 	def init_modules(self):
 		self.modules = {
 			"data": data.Module(self),
-			#"items": items.Module(self),
+			"items": items.Module(self),
 			"stats": stats.Module(self)
 		}
 		for module in self.modules.values():
@@ -53,7 +53,7 @@ class Pypboy(game.core.Engine):
 
 	def check_gpio_input(self):
 		for pin in self.gpio_actions.keys():
-			if GPIO.input(pin):
+			if not GPIO.input(pin):
 				self.handle_action(self.gpio_actions[pin])
 
 	def update(self):
