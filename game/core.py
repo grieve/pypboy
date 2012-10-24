@@ -11,7 +11,6 @@ class Engine(object):
 		self.window = pygame.display.set_mode((width, height))
 		self.screen = pygame.display.get_surface()
 		pygame.display.set_caption(title)
-		pygame.font.init()
 		pygame.mouse.set_visible(False)
 
 		self.groups = []

@@ -74,3 +74,8 @@ AMENITIES = {
 	'marketplace': 		MAP_ICONS['misc'],
 	'atm': 				MAP_ICONS['misc'],
 }
+
+pygame.font.init()
+FONTS = {}
+for x in range(10, 28):
+	FONTS[x] = pygame.font.Font('monofonto.ttf', x)

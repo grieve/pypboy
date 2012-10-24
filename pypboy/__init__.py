@@ -96,16 +96,11 @@ class SubModule(game.EntityGroup):
 
 		if config.SOUND_ENABLED:
 			self.submodule_change_sfx = pygame.mixer.Sound('sounds/submodule_change.ogg')
-			self.dial_move_sfx = pygame.mixer.Sound('sounds/dial_move.ogg')
 
 	def handle_action(self, action, value=0):
 		if action.startswith("dial_"):
-			if config.SOUND_ENABLED:
-				self.dial_move_sfx.play()
-			if action[4:] == "up":
-				pass
-			else:
-				pass
+			if hasattr(self, "menu"):
+				self.menu.handle_action(action)
 		elif action in self.action_handlers:
 			self.action_handlers[action]()
 

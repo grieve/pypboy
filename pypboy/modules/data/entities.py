@@ -21,8 +21,7 @@ class Map(game.Entity):
 		self._map_surface = pygame.Surface((width, width))
 		self._render_rect = render_rect
 		super(Map, self).__init__((width, width), *args, **kwargs)
-		basicFont = pygame.font.SysFont(None, 14)
-		text = basicFont.render("Loading map...", True, (95, 255, 177), (0, 0, 0))
+		text = config.FONTS[14].render("Loading map...", True, (95, 255, 177), (0, 0, 0))
 		self.image.blit(text, (10, 10))
 
 	def fetch_map(self, position, radius):
@@ -58,8 +57,7 @@ class Map(game.Entity):
 				image = config.MAP_ICONS['misc']
 			pygame.transform.scale(image, (10, 10))
 			self._map_surface.blit(image, (tag[1], tag[2]))
-			basicFont = pygame.font.SysFont(None, 12)
-			text = basicFont.render(tag[0], True, (95, 255, 177), (0, 0, 0))
+			text = config.FONTS[12].render(tag[0], True, (95, 255, 177), (0, 0, 0))
 			self._map_surface.blit(text, (tag[1] + 17, tag[2] + 4))
 		
 		self.image.blit(self._map_surface, (0, 0), area=self._render_rect)
@@ -165,8 +163,7 @@ class MapGrid(game.Entity):
 			pygame.transform.scale(image, (10, 10))
 			self.image.blit(image, (self.tags[name][0], self.tags[name][1]))
 			# try:
-			basicFont = pygame.font.SysFont(None, 12)
-			text = basicFont.render(name, True, (95, 255, 177), (0, 0, 0))
+			text = config.FONTS[12].render(name, True, (95, 255, 177), (0, 0, 0))
 			# text_width = text.get_size()[0]
 			# 	pygame.draw.rect(
 			# 		self,

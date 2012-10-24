@@ -69,8 +69,8 @@ class Radio(game.Entity):
 		if self.osc:
 			self.blit(self.osc.screen, (550, 150))
 			
-		selectFont = pygame.font.SysFont(None, 24)
-		basicFont = pygame.font.SysFont(None, 22)
+		selectFont = pygame.font.Font('monofonto.ttf', 24)
+		basicFont = pygame.font.Font('monofonto.ttf', 22)
 		text = selectFont.render(" -   Random Play Radio ", True, (105, 251, 187), (0, 0, 0))
 		self.blit(text, (75, 75))
 		text = basicFont.render("  'r' selects a random song ", True, (105, 251, 187), (0, 0, 0))
