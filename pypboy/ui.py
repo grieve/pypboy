@@ -93,7 +93,6 @@ class Scanlines(game.Entity):
 				colour = 0
 
 	def render(self, interval, *args, **kwargs):
-		print interval, self.rect[1], self.top
 		self.top += self.speed * interval
 		self.rect[1] = self.top
 		self.dirty = 1
