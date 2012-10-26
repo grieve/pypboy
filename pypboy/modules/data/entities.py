@@ -204,6 +204,7 @@ class RadioStation(game.Entity):
 		super(RadioStation, self).__init__((10, 10), *args, **kwargs)
 		self.state = self.STATES['stopped']
 		self.files = self.load_files()
+		pygame.mixer.music.set_endevent(config.EVENTS['SONG_END'])
 
 
 	def play_random(self):
@@ -211,7 +212,6 @@ class RadioStation(game.Entity):
 		self.filename = f
 		pygame.mixer.music.load(f)
 		pygame.mixer.music.play()
-		pygame.mixer.music.set_endevent(config.EVENTS['SONG_END'])
 		self.state = self.STATES['playing']
 		
 	def play(self):
@@ -228,9 +228,6 @@ class RadioStation(game.Entity):
 	def stop(self):
 		self.state = self.STATES['stopped']
 		pygame.mixer.music.stop()
-
-	def render(self, *args, **kwargs):
-		pass
 
 	def load_files(self):
 		files = []
