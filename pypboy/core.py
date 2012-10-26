@@ -85,6 +85,10 @@ class Pypboy(game.core.Engine):
 			if hasattr(self, 'active'):
 				self.active.handle_action(action)
 
+	def handle_event(self, event):
+		if hasattr(self, 'active'):
+			self.active.handle_event(event)
+
 	def run(self):
 		self.running = True
 		while self.running:
@@ -97,6 +101,8 @@ class Pypboy(game.core.Engine):
 							self.handle_action(config.ACTIONS[event.key])
 				elif event.type == pygame.QUIT:
 					self.running = False
+				else:
+					self.handle_event(event)
 
 			self.update()
 			self.render()

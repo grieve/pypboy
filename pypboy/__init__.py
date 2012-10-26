@@ -70,6 +70,11 @@ class BaseModule(game.EntityGroup):
 			if hasattr(self, 'active') and self.active:
 				self.active.handle_action(action, value)
 
+	def handle_event(self, event):
+		if hasattr(self, 'active') and self.active:
+			self.active.handle_event(event)
+
+
 	def handle_pause(self):
 		self.paused = True
 		if config.GPIO_AVAILABLE:
@@ -103,6 +108,9 @@ class SubModule(game.EntityGroup):
 				self.menu.handle_action(action)
 		elif action in self.action_handlers:
 			self.action_handlers[action]()
+
+	def handle_event(self, event):
+		pass
 
 	def handle_pause(self):
 		self.paused = True
