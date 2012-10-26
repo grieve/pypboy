@@ -86,24 +86,26 @@ class Pypboy(game.core.Engine):
 				self.active.handle_action(action)
 
 	def handle_event(self, event):
-		if hasattr(self, 'active'):
-			self.active.handle_event(event)
+		if event.type == pygame.KEYDOWN:
+			if (event.key == pygame.K_ESCAPE):
+				self.running = False
+			else:
+				if event.key in config.ACTIONS:
+					self.handle_action(config.ACTIONS[event.key])
+		elif event.type == pygame.QUIT:
+			self.running = False
+		elif event.type == config.EVENTS['SONG_END']:
+			if hasattr(config, 'radio'):
+				config.radio.handle_event(event)
+		else:
+			if hasattr(self, 'active'):
+				self.active.handle_event(event)
 
 	def run(self):
 		self.running = True
 		while self.running:
 			for event in pygame.event.get():
-				if event.type == pygame.KEYDOWN:
-					if (event.key == pygame.K_ESCAPE):
-						self.running = False
-					else:
-						if event.key in config.ACTIONS:
-							self.handle_action(config.ACTIONS[event.key])
-				elif event.type == pygame.QUIT:
-					self.running = False
-				else:
-					self.handle_event(event)
-
+				self.handle_event(event)
 			self.update()
 			self.render()
 			self.check_gpio_input()
