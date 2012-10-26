@@ -8,6 +8,10 @@ HEIGHT = 360
 
 MAP_FOCUS = (-5.9347681, 54.5889076)
 
+EVENTS = {
+	'SONG_END': pygame.USEREVENT + 1
+}
+
 ACTIONS = {
 	pygame.K_F1: "module_stats",
 	pygame.K_F2: "module_items",
